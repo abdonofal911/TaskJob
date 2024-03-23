@@ -16,6 +16,8 @@ export default images = {
   Mist: require('./mist.png'),
   other: require('./partlycloudy.png'),
   bg: require('./bg.png'),
+  weather: require('./weather.jpeg'),
+  forecastingWeather: require('./forecastingWeather.jpg'),
 };
 const ii = {
   'Partly cloudy': require('./partlycloudy.png'),

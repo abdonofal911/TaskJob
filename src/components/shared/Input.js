@@ -22,9 +22,10 @@ const Input = ({
   showPassword,
   icon,
   email,
+  autoCorrect,
   ...rest
 }) => {
-  const [hidePassword, setHidePassword] = useState(true);
+  const [hidePassword, setHidePassword] = useState(password);
   const toggleSwitch = ({}) => {
     setHidePassword(previousState => !previousState);
   };
@@ -50,6 +51,7 @@ const Input = ({
             onEndEditing,
             onFocus,
             autoCapitalize,
+            autoCorrect,
           }}
           {...rest}
           style={styles.input}

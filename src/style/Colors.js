@@ -11,4 +11,6 @@ export default {
   orange: 'rgba(248, 164, 76,1)',
   red: 'red',
   purple: '#5b4dbc',
+  lightRed: '#d26060',
+  yellow: '#ffc700',
 };
