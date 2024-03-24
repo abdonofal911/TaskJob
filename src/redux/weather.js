@@ -21,7 +21,7 @@ export const getWeatherForecast = createAsyncThunk(
   async (city, {rejectWithValue}) => {
     try {
       const response = await API.get(
-        `/forecast.json?key=${apiKey}&q=${city}&days=7`,
+        `/forecast.json?key=${apiKey}&q=${city}&days=3`,
       );
       const weatherData = response.data;
       return weatherData;

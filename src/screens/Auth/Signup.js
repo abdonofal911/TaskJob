@@ -17,9 +17,58 @@ import {fontScale, scale, vScale} from '../../style/Scale';
 import AppButton from '../../components/shared/AppButton';
 import {CheckBox} from '@rneui/themed';
 import icons from '../../assets/icons';
+import {useDispatch} from 'react-redux';
+import {useFormik, validateYupSchema} from 'formik';
+import * as Yup from 'yup';
+import {signup} from '../../apis';
+import {setUserInfo} from '../../redux/user';
 
+const passwordRgx = '^(?=.*[A-Za-z])(?=.*d)[A-Za-zd]{8,}$';
 const Signup = ({navigation}) => {
   const [check, setCheck] = useState(false);
+  const dispatch = useDispatch();
+
+  const initValues = {
+    username: '',
+    email: '',
+    password: '',
+    passwordMatch: '',
+  };
+
+  const validationSchema = Yup.object({
+    username: Yup.string()
+      .required('please enter username')
+      .min(8, 'username is < 8 letters'),
+    email: Yup.string()
+      .required('please enter email')
+      .email('please enter a valid email'),
+    password: Yup.string()
+      .required('please enter password')
+      .matches(
+        passwordRgx,
+        'Minimum eight characters, at least one letter and one number',
+      ),
+    passwordMatch: Yup.string().oneOf(
+      [Yup.ref('password'), null],
+      'Passwords must match',
+    ),
+  });
+
+  const formik = useFormik({
+    initialValues: initValues,
+    validationSchema: validationSchema,
+    onSubmit: values => handleOnSubmit(values),
+  });
+
+  const handleOnSubmit = async values => {
+    const response = await signup(values);
+    console.log('SignUp Response ', response);
+    if (response.email) {
+      dispatch(setUserInfo(response));
+      navigation.navigate('AppStack');
+      console.log(response);
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -29,17 +78,43 @@ const Signup = ({navigation}) => {
         onPress={() => navigation.goBack()}
       />
       <Spacer space={20} />
-      <Input label={'User name'} placeholder="Enter your name" />
-      <Input label={'Email'} placeholder="Enter your email" />
+      <Input
+        label={'User name'}
+        placeholder="Enter your name"
+        onChangeText={formik.handleChange('username')}
+        value={formik.values.username}
+        errorMessage={formik.touched.username && formik.errors.username}
+        onBlur={() => formik.setFieldTouched('username')}
+      />
+      <Input
+        label={'Email'}
+        placeholder="Enter your email"
+        onChangeText={formik.handleChange('email')}
+        value={formik.values.email}
+        errorMessage={formik.touched.email && formik.errors.email}
+        onBlur={() => formik.setFieldTouched('email')}
+      />
       <Input
         label={'Password'}
         showPassword
         placeholder="Enter your password"
+        autoCapitalize="none"
+        onChangeText={formik.handleChange('password')}
+        value={formik.values.password}
+        errorMessage={formik.touched.password && formik.errors.password}
+        onBlur={() => formik.setFieldTouched('password')}
       />
       <Input
         label={'Confirm Password'}
         showPassword
         placeholder="Enter your password"
+        autoCapitalize="none"
+        onChangeText={formik.handleChange('passwordMatch')}
+        value={formik.values.passwordMatch}
+        errorMessage={
+          formik.touched.passwordMatch && formik.errors.passwordMatch
+        }
+        onBlur={() => formik.setFieldTouched('passwordMatch')}
       />
       <View style={styles.termsRow}>
         <CheckBox
@@ -52,7 +127,7 @@ const Signup = ({navigation}) => {
         <Text></Text>
       </View>
       <Spacer space={25} />
-      <AppButton title="Sign Up" onPress={() => {}} />
+      <AppButton title="Sign Up" onPress={formik.handleSubmit} />
     </View>
   );
 };

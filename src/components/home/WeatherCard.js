@@ -6,21 +6,19 @@ import Colors from '../../style/Colors';
 import Font from '../../style/Font';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
-// location-pin
-
-const WeatherCard = () => {
+const WeatherCard = ({item, locationName}) => {
   return (
     <View style={styles.container}>
       <ImageBackground source={images.weather} style={styles.bg}>
         <View style={styles.tempContainer}>
           <Image source={images['Partly cloudy']} style={styles.tempImage} />
-          <Text style={styles.tempText}>28’</Text>
+          <Text style={styles.tempText}>{item.day.avgtemp_c}’</Text>
         </View>
       </ImageBackground>
       <View style={styles.footerRow}>
         <View style={styles.locationRow}>
           <MaterialIcons name="location-pin" size={16} color={Colors.orange} />
-          <Text style={styles.locationText}>Cairo</Text>
+          <Text style={styles.locationText}>{locationName}</Text>
         </View>
         <View style={styles.dateRow}>
           <MaterialIcons
@@ -28,7 +26,7 @@ const WeatherCard = () => {
             size={16}
             color={Colors.orange}
           />
-          <Text style={styles.dateText}>2023-09-01</Text>
+          <Text style={styles.dateText}>{item.date}</Text>
         </View>
       </View>
     </View>
